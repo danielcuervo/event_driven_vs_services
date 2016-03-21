@@ -1,0 +1,34 @@
+services:
+
+  trigger_capture_command_handler:
+    class: Payments\Message\Subscriber\TriggerCapture
+    arguments:
+      - '@command_bus'
+    tags:
+      - { name: event_subscriber, subscribes_to: order_imported }
+
+  trigger_fraud_command_handler:
+    class: Payments\Message\Subscriber\TriggerFraud
+    arguments:
+      - '@command_bus'
+    tags:
+      - { name: event_subscriber, subscribes_to: captured }
+
+  trigger_source_command_handler:
+    class: Inventory\Message\Subscriber\TriggerSourcing
+    arguments:
+      - '@command_bus'
+    tags:
+      - { name: event_subscriber, subscribes_to: none }
+
+  trigger_shipment_command_handler:
+    class: Logistics\Message\Subscriber\TriggerShipment
+    arguments:
+      - '@command_bus'
+    tags:
+      - { name: event_subscriber, subscribes_to: captured }
+
+
+parameters:
+    captureAtTheStart: true
+    skipSourcing: true

@@ -1,0 +1,19 @@
+services:
+
+  trigger_capture_command_handler:
+    class: Payments\Message\Subscriber\TriggerCapture
+    arguments:
+      - '@command_bus'
+    tags:
+      - { name: event_subscriber, subscribes_to: shipped }
+
+  trigger_source_command_handler:
+    class: Inventory\Message\Subscriber\TriggerSourcing
+    arguments:
+      - '@command_bus'
+    tags:
+      - { name: event_subscriber, subscribes_to: fraud_assessed }
+
+
+parameters:
+    captureAtTheEnd: true

@@ -1,0 +1,64 @@
+services:
+
+  import_order_command_handler:
+    class: Sales\Message\Handler\ImportOrder
+    arguments:
+      - '@event_bus'
+    tags:
+      - { name: command_handler, handles: import_order }
+
+  check_fraud_command_handler:
+    class: Payments\Message\Handler\CheckFraud
+    arguments:
+      - '@event_bus'
+    tags:
+      - { name: command_handler, handles: check_fraud }
+
+  capture_command_handler:
+    class: Payments\Message\Handler\Capture
+    arguments:
+      - '@event_bus'
+    tags:
+      - { name: command_handler, handles: capture }
+
+  source_command_handler:
+    class: Inventory\Message\Handler\Source
+    arguments:
+      - '@event_bus'
+    tags:
+      - { name: command_handler, handles: source }
+
+  ship_command_handler:
+    class: Logistics\Message\Handler\Ship
+    arguments:
+      - '@event_bus'
+    tags:
+      - { name: command_handler, handles: ship }
+
+  trigger_fraud_command_handler:
+    class: Payments\Message\Subscriber\TriggerFraud
+    arguments:
+      - '@command_bus'
+    tags:
+      - { name: event_subscriber, subscribes_to: order_imported }
+
+  trigger_capture_command_handler:
+    class: Payments\Message\Subscriber\TriggerCapture
+    arguments:
+      - '@command_bus'
+    tags:
+      - { name: event_subscriber, subscribes_to: fraud_assessed }
+
+  trigger_source_command_handler:
+    class: Inventory\Message\Subscriber\TriggerSourcing
+    arguments:
+      - '@command_bus'
+    tags:
+      - { name: event_subscriber, subscribes_to: captured }
+
+  trigger_shipment_command_handler:
+    class: Logistics\Message\Subscriber\TriggerShipment
+    arguments:
+      - '@command_bus'
+    tags:
+      - { name: event_subscriber, subscribes_to: sourced }
